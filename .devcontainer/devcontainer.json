@@ -1,0 +1,20 @@
+{
+	"name": "hackaton",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"NomicFoundation.hardhat-solidity",
+				"Gruntfuggly.todo-tree",
+				"eamodio.gitlens",
+				"mhutchie.git-graph"
+			]
+		}
+	},
+	"runArgs": [
+		"--name=hackaton"
+	],
+	"postStartCommand": "rustup update && foundryup"
+}
