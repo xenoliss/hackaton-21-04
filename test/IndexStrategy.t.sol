@@ -26,12 +26,12 @@ contract IndexStrategyTest is Test {
     function setUp() public {
         vm.createSelectFork("https://sepolia.base.org");
 
-        usdc = ERC20WithMinters(0x8112239d4791A93a60220a96b1c3CFA6636FCc1a);
-        weth = ERC20WithMinters(0x98c464caa745104EA8FdFFDbafC49C13Ab74A3Ff);
-        wbtc = ERC20WithMinters(0xaA4A61e0264c45eC84c90B8A01c85502439Fb611);
-        link = ERC20WithMinters(0x8c6D7042f9Eb9C69701f75cC2E0ea4c324195A9B);
+        usdc = ERC20WithMinters(0x47E27927fDeD5bF66dDA166925cCB53Ff76D09B0);
+        weth = ERC20WithMinters(0xE187295A56FE6609a364B7ca9746a3aB633c7CEf);
+        wbtc = ERC20WithMinters(0x4771Ec5AB9D6Fe38bA5c005b79730108499f44A8);
+        link = ERC20WithMinters(0x418CF6f3A2D0ce24CB21a506A1Ea3d611935A5c8);
 
-        strategy = IndexStrategy(0x09405f34c5d8d51d2fcb5242F2438562e8416434);
+        strategy = IndexStrategy(0x6Bdb041b7bcFB7eA34fEE79e7Df46CcDAEC0413a);
 
         usdc.mint({to: address(this), amount: 1000 * 1e6});
         usdc.approve({spender: address(strategy), amount: 1000 * 1e6});

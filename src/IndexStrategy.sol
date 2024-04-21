@@ -85,6 +85,17 @@ contract IndexStrategy is ERC20 {
     function deposit(uint256 usdcAmountIn) external {
         require(isOpen || investors[msg.sender], "Sender can not invest");
 
+        // Mint shares.
+        uint256 totalSupply_ = totalSupply();
+        if (totalSupply_ == 0) {
+            _mint({to: msg.sender, amount: usdcAmountIn});
+        } else {
+            (, uint256 totalUsdcValue) = _usdcValues();
+            uint256 percent = usdcAmountIn * 1e18 / totalUsdcValue;
+            uint256 toMint = percent * totalSupply_ / 1e18;
+            _mint({to: msg.sender, amount: toMint});
+        }
+
         // Transfer the USDC from the sender to the Strategy contract.
         ERC20(usdc).transferFrom({from: msg.sender, to: address(this), amount: usdcAmountIn});
 
@@ -104,17 +115,6 @@ contract IndexStrategy is ERC20 {
         uint256 lastAmountIn = usdcAmountIn - swappedAmount;
         ERC20(usdc).transfer({to: address(amm), amount: lastAmountIn});
         amm.swap({tokenIn: usdc, tokenOut: tokens[l - 1], receiver: address(this)});
-
-        // Mint shares.
-        uint256 totalSupply_ = totalSupply();
-        if (totalSupply_ == 0) {
-            _mint({to: msg.sender, amount: usdcAmountIn});
-        } else {
-            (, uint256 totalUsdcValue) = _usdcValues();
-            uint256 percent = usdcAmountIn * 1e18 / totalUsdcValue;
-            uint256 toMint = percent * totalSupply_ / 1e18;
-            _mint({to: msg.sender, amount: toMint});
-        }
     }
 
     /// @notice Withdraw funds from the strategy.
