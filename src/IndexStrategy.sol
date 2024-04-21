@@ -142,6 +142,7 @@ contract IndexStrategy is ERC20 {
     function rebalance() external {
         uint256 elapsedTime = block.timestamp - lastRebalanceTimestamp;
         require(elapsedTime >= rebalanceInterval, "Can't rebalance now");
+        lastRebalanceTimestamp = block.timestamp;
 
         // TODO: Smarter algo to only buy/sell the difference.
 

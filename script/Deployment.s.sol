@@ -9,6 +9,8 @@ import {AMM} from "src/AMM.sol";
 
 contract DeploymentScript is Script {
     function run() public {
+        vm.startBroadcast();
+
         // 1. Deploy the mocked tokens.
         ERC20WithMinters usdc = _deployToken({name: "USDC", symbol: "USDC", decimals: 6});
         ERC20WithMinters weth = _deployToken({name: "WETH", symbol: "WETH", decimals: 18});
@@ -48,14 +50,16 @@ contract DeploymentScript is Script {
         address strategy = factory.deployNewStrategy({
             tokens: underlyings,
             weights: weights,
-            rebalanceInterval: 1 days,
+            rebalanceInterval: 60,
             isOpen: true,
             investors: investors,
-            name: "50/25/25 WETH WBTC LINK",
-            symbol: "50/25/25 WETH WBTC LINKC"
+            name: "50/25/25 WETH/WBTC/LINK",
+            symbol: "50/25/25 WETH/WBTC/LINK"
         });
 
         console.log("Strategy deployed at", address(strategy));
+
+        vm.stopBroadcast();
     }
 
     function _deployAMM(address[] memory tokens, address[] memory priceFeeds) private returns (AMM) {
