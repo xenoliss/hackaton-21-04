@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.13;
+pragma solidity ^0.8.25;
 
 import {Script, console} from "forge-std/Script.sol";
 
@@ -34,7 +34,7 @@ contract DeploymentScript is Script {
         priceFeeds[1] = address(0x0FB99723Aee6f420beAD13e6bBB79b7E6F034298);
         priceFeeds[2] = address(0xb113F5A928BCfF189C998ab20d753a47F9dE5A61);
 
-        AMM amm = _deployAMM({tokens: underlyings, priceFeeds: priceFeeds});
+        AMM amm = _deployAMM({usdc: address(usdc), tokens: underlyings, priceFeeds: priceFeeds});
         console.log("Mocked AMM deployed at", address(amm));
 
         // 3. Deploy the strategy factory.
@@ -62,8 +62,8 @@ contract DeploymentScript is Script {
         vm.stopBroadcast();
     }
 
-    function _deployAMM(address[] memory tokens, address[] memory priceFeeds) private returns (AMM) {
-        AMM amm = new AMM();
+    function _deployAMM(address usdc, address[] memory tokens, address[] memory priceFeeds) private returns (AMM) {
+        AMM amm = new AMM(usdc);
 
         for (uint256 i; i < tokens.length; i++) {
             amm.setPriceFeed({token: tokens[i], priceFeed: priceFeeds[i]});

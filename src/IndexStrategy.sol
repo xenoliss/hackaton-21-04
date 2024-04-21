@@ -152,7 +152,12 @@ contract IndexStrategy is ERC20 {
         for (uint256 i; i < tokensCount; i++) {
             address token = tokens[i];
 
-            ERC20(token).transfer({to: address(amm), amount: ERC20(token).balanceOf(address(this))});
+            uint256 balance = ERC20(token).balanceOf(address(this));
+            if (balance == 0) {
+                continue;
+            }
+
+            ERC20(token).transfer({to: address(amm), amount: balance});
             amm.swap({tokenIn: token, tokenOut: usdc, receiver: address(this)});
         }
 

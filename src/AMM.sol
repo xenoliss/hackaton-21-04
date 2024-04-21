@@ -8,9 +8,14 @@ import {ERC20} from "solady/tokens/ERC20.sol";
 import {ERC20WithMinters} from "./ERC20WithMinters.sol";
 
 contract AMM is Ownable {
+    /// @notice The USDC address.
+    address public immutable usdc;
+
+    /// @notice The chainlink price feeds per token.
     mapping(address token => AggregatorV3Interface priceFeed) public priceFeeds;
 
-    constructor() {
+    constructor(address usdc_) {
+        usdc = usdc_;
         _initializeOwner(msg.sender);
     }
 
@@ -34,7 +39,7 @@ contract AMM is Ownable {
 
         amountOut = getAmountOut(tokenIn, tokenOut, amountIn);
 
-        ERC20WithMinters(tokenIn).burn({from: msg.sender, amount: amountIn});
+        ERC20WithMinters(tokenIn).burn({from: address(this), amount: amountIn});
         ERC20WithMinters(tokenOut).mint({to: receiver, amount: amountOut});
     }
 
@@ -63,6 +68,10 @@ contract AMM is Ownable {
     ///
     /// @param token The token address.
     function _getPrice(address token) private view returns (uint256) {
+        if (token == usdc) {
+            return 1e18;
+        }
+
         (, int256 answer,,,) = priceFeeds[token].latestRoundData();
         return uint256(answer) * 1e10;
     }
