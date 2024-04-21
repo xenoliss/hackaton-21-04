@@ -35,17 +35,11 @@ contract DeploymentScript is Script {
         AMM amm = _deployAMM({tokens: underlyings, priceFeeds: priceFeeds});
         console.log("Mocked AMM deployed at", address(amm));
 
-        // 3. Register the AMM as an allowed minter of the tokens.
-        usdc.setCanMint({minter: address(amm), value: true});
-        weth.setCanMint({minter: address(amm), value: true});
-        wbtc.setCanMint({minter: address(amm), value: true});
-        link.setCanMint({minter: address(amm), value: true});
-
-        // 4. Deploy the strategy factory.
+        // 3. Deploy the strategy factory.
         StrategyFactory factory = _deployStrategyFactory({usdc: address(usdc), amm: amm});
         console.log("Strategy factory deployed at", address(factory));
 
-        // 5. Deploy a strategy.
+        // 4. Deploy a strategy.
         uint16[] memory weights = new uint16[](3);
         weights[0] = 50_00;
         weights[1] = 25_00;
